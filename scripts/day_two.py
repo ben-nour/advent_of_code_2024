@@ -8,39 +8,33 @@ with open("./data/day_two_input.txt") as file:
 LEVELS_COUNT = len(levels)
 
 
-def process_levels(levels):
-    unsafe_levels = 0
-    for level in levels:
-        for index, number in enumerate(level):
-            number = int(number)
-            previous_number = int(level[index - 1])
-            if index == 1:
-                if number - previous_number < 0:
-                    flag = 0
-                else:
-                    flag = 1
-            if index != 0:
-                if number - previous_number > 3:
-                    unsafe_levels += 1
-                    break
-                if number < previous_number and abs(number - previous_number) > 3:
-                    unsafe_levels += 1
-                    break
-                if number == previous_number:
-                    unsafe_levels += 1
-                    break
-                if number - previous_number < 0:
-                    new_flag = 0
-                else:
-                    new_flag = 1
-                if new_flag != flag:
-                    unsafe_levels += 1
-                    break
-
-    return unsafe_levels
+def process_level(level):
+    for index, number in enumerate(level):
+        number = int(number)
+        previous_number = int(level[index - 1])
+        if index == 1:
+            if number - previous_number < 0:
+                flag = 0
+            else:
+                flag = 1
+        if index != 0:
+            if number - previous_number > 3:
+                return 1
+            if number < previous_number and abs(number - previous_number) > 3:
+                return 1
+            if number == previous_number:
+                return 1
+            if number - previous_number < 0:
+                new_flag = 0
+            else:
+                new_flag = 1
+            if new_flag != flag:
+                return 1
+    return 0  # No issues.
 
 
-answer = LEVELS_COUNT - process_levels(levels)
+invalid_levels = sum([process_level(level) for level in levels])
+answer = LEVELS_COUNT - invalid_levels
 print(answer)
 
 

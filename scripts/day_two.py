@@ -61,5 +61,4 @@ for level in levels:
     else:
         invalid_levels += 1
 
-# Part 2 answer.
 print(LEVELS_COUNT - invalid_levels)

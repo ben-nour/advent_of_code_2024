@@ -7,10 +7,30 @@ with open("./data/day_three_input.txt") as file:
 # Part 1
 regex = r"mul\([0-9]+,*[0-9]+\)"
 matches = re.findall(regex, data)
-numbers = 0
+answer = 0
 for match in matches:
     for to_replace in ("mul", "(", ")"):
         match = match.replace(to_replace, "")
     match_numbers = [int(element) for element in match.split(",")]
-    numbers += math.prod(match_numbers)
-print(numbers)
+    answer += math.prod(match_numbers)
+
+print(f"Part 1 answer: {answer}")
+
+# Part 2
+regex = r"don't\(\)|do\(\)|mul\([0-9]+,*[0-9]+\)"
+matches = re.findall(regex, data)
+answer = 0
+flag = True
+for index, match in enumerate(matches):
+    if re.fullmatch(r"don't\(\)", match):
+        flag = False
+    if re.fullmatch(r"do\(\)", match):
+        flag = True
+    if re.fullmatch(r"mul\([0-9]+,*[0-9]+\)", match):
+        for to_replace in ("mul", "(", ")"):
+            match = match.replace(to_replace, "")
+        match = [int(element) for element in match.split(",")]
+        match = math.prod(match)
+        if flag:
+            answer += match
+print(f"Part 2 answer: {answer}")

@@ -1,11 +1,22 @@
-# Part 1.
-
 from copy import copy
 
 with open("./data/day_two_input.txt") as file:
     levels = [line.split() for line in file]
 
 LEVELS_COUNT = len(levels)
+
+
+def create_list_versions(original: list) -> list:
+    """
+    Create different versions of a list. Each version has one element removed.
+    """
+    copies = []
+    for index, number in enumerate(original):
+        list_copy = copy(original)
+        del list_copy[index]
+        copies.append(list_copy)
+    copies.insert(0, original)
+    return copies
 
 
 def process_level(level):
@@ -33,36 +44,22 @@ def process_level(level):
     return 0  # No issues.
 
 
+# Part 1 answer.
 invalid_levels = sum([process_level(level) for level in levels])
-answer = LEVELS_COUNT - invalid_levels
-print(answer)
+print(LEVELS_COUNT - invalid_levels)
 
-
-# Part 2.
-def create_list_versions(original: list) -> list:
-    """
-    Create different versions of a list. Each version has one element removed.
-    """
-    copies = []
-    for index, number in enumerate(original):
-        list_copy = copy(original)
-        del list_copy[index]
-        copies.append(list_copy)
-    copies.insert(0, original)
-    return copies
-
-
-"""
+# Part 2 answer.
 invalid_levels = 0
 for level in levels:
     different_versions = create_list_versions(level)
-    level_version_fault_count = 0
-    for version in different_versions:
-
-
-    if level_version_fault_count > 1:
+    versions_count = len(different_versions)
+    errors = sum([process_level(version) for version in different_versions])
+    if (
+        errors < versions_count
+    ):  # If just one version passes the level is considered safe.
+        continue
+    else:
         invalid_levels += 1
 
-answer = LEVELS_COUNT - invalid_levels
-print(answer)
-"""
+# Part 2 answer.
+print(LEVELS_COUNT - invalid_levels)

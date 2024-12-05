@@ -3,37 +3,44 @@ import copy
 with open("./data/day_four_input.txt") as file:
     data = file.readlines()
 
-# Adding . padding to left and right column.
-cleaned_lines = []
-for line in data:
-    cleaned_line = ["."]
-    for letter in line:
-        if letter != "\n":
-            cleaned_line.append(letter)
-    cleaned_line.insert(len(cleaned_line), ".")
-    cleaned_line.insert(len(cleaned_line), "\n")
-    cleaned_lines.append(cleaned_line)
 
-first_list = cleaned_lines[0]
-for cleaned_line in cleaned_lines[1:]:
-    first_list.extend(cleaned_line)
-
-# Create grid to visualise padding.
-grid = ""
-for letter in first_list:
-    grid += letter
-print(grid)
-
-# Coordinates
-coordinates = {}
-for index, letter in enumerate(first_list):
-    coordinates.update({index: letter})
+def pad_grid(data):
+    """
+    Pad grids with . characters
+    to prevent out-of-bound problems.
+    """
+    padded_rows = []
+    for row in data:
+        padded_row = ["."]
+        for letter in row:
+            if letter != "\n":
+                padded_row.append(letter)
+        padded_row.insert(len(padded_row), ".")
+        padded_row.insert(len(padded_row), "\n")
+        padded_rows.append(padded_row)
+    return padded_rows
 
 
+def create_coordinates(grid):
+    # Create string.
+    grid_string = padded_grid[0]
+    for padded_row in padded_grid[1:]:
+        grid_string.extend(padded_row)
+
+    # Create coordinates.
+    coordinates = {}
+    for index, letter in enumerate(grid_string):
+        coordinates.update({index: letter})
+    return grid_string, coordinates
+
+
+padded_grid = pad_grid(data)
+grid_string, coordinates = create_coordinates(padded_grid)
+
+# Part 1.
 xmas_count = 0
-for index, letter in enumerate(first_list):
-    surrounding_coordinates = []
-    line_jump = 143
+for index, letter in enumerate(grid_string):
+    line_jump = 143  # 143
     if letter == "X":
         # Right
         if (
@@ -98,25 +105,4 @@ for index, letter in enumerate(first_list):
         ):
             xmas_count += 1
 
-
 print(xmas_count)
-
-
-"""
-
-right = 3
-left = 2 
-below = 1
-above = 2
-8
-
-bottom_right = 1
-bottom_left = 1
-10
-
-top_left = 4
-14 ?
-top_right = 4
-17 ?
-
-"""

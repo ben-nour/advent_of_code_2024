@@ -1,9 +1,3 @@
-import copy
-
-with open("./data/day_four_input.txt") as file:
-    data = file.readlines()
-
-
 def pad_grid(data):
     """
     Pad grids with . characters
@@ -34,13 +28,15 @@ def create_coordinates(grid):
     return grid_string, coordinates
 
 
-padded_grid = pad_grid(data)
+with open("./data/day_four_input.txt") as file:
+    padded_grid = pad_grid(file.readlines())
+
 grid_string, coordinates = create_coordinates(padded_grid)
 
 # Part 1.
 xmas_count = 0
 for index, letter in enumerate(grid_string):
-    line_jump = 143  # 143
+    line_jump = 143
     if letter == "X":
         # Right
         if (
@@ -105,4 +101,46 @@ for index, letter in enumerate(grid_string):
         ):
             xmas_count += 1
 
+print(xmas_count)
+
+# Part 2
+xmas_count = 0
+for index, letter in enumerate(grid_string):
+    line_jump = 143
+    if letter == "A":
+        # Position 1 - works - 2 matches.
+        if (
+            coordinates.get(index + line_jump + 1) == "S"
+            and coordinates.get(index + line_jump - 1) == "M"
+            and coordinates.get(index - line_jump - 1) == "M"
+            and coordinates.get(index - line_jump + 1) == "S"
+        ):
+            xmas_count += 1
+
+        # Position 2 - works - 1 match.
+        if (
+            coordinates.get(index + line_jump + 1) == "M"
+            and coordinates.get(index + line_jump - 1) == "S"
+            and coordinates.get(index - line_jump - 1) == "S"
+            and coordinates.get(index - line_jump + 1) == "M"
+        ):
+            xmas_count += 1
+
+        # Position 3 - works - 5 matches
+        if (
+            coordinates.get(index + line_jump + 1) == "M"
+            and coordinates.get(index + line_jump - 1) == "M"
+            and coordinates.get(index - line_jump - 1) == "S"
+            and coordinates.get(index - line_jump + 1) == "S"
+        ):
+            xmas_count += 1
+
+        # Position 4 - works - 1 match
+        if (
+            coordinates.get(index + line_jump + 1) == "S"
+            and coordinates.get(index + line_jump - 1) == "S"
+            and coordinates.get(index - line_jump - 1) == "M"
+            and coordinates.get(index - line_jump + 1) == "M"
+        ):
+            xmas_count += 1
 print(xmas_count)

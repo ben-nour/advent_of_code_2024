@@ -1,3 +1,5 @@
+from math import floor
+
 with open("./data/day_five_input.txt") as file:
     data = file.readlines()
 
@@ -21,7 +23,7 @@ def create_ordering(rules):
                     ordering.insert(0, first_number)
             else:
                 same_number_index = ordering.index(first_number)
-                if same_number_index > found_index:
+                if same_number_index >= found_index:
                     del ordering[same_number_index]
                     if found_index != 0:
                         ordering.insert(found_index - 1, first_number)
@@ -34,14 +36,20 @@ def create_ordering(rules):
         # Second number doesn't exist already in ordering.
         except:
             if first_number not in ordering:
-                ordering.insert(len(ordering), first_number)
-            if second_number not in ordering:
-                ordering.insert(len(ordering), second_number)
+                ordering.insert(
+                    len(ordering), first_number
+                )  # TODO - what if first_number doex exist?
+            ordering.insert(len(ordering), second_number)
+        if first_number == "37":
+            print(first_number, second_number)
+            print(ordering)
     return ordering
 
 
 def find_correct_updates(updates, ordering):
     valid_updates = []
+
+    # Find correct updates.
     for update in updates:
         update = update.split(",")
         update_length = len(update)
@@ -60,14 +68,14 @@ def find_correct_updates(updates, ordering):
     # Find middle number
     answer = 0
     for valid_update in valid_updates:
-        answer += int(valid_update[int(len(valid_update) / 2)])
+        if len(valid_updates) % 2 == 0:
+            answer += int(valid_update[int(len(valid_update) / 2)])
+        else:
+            answer += int(valid_update[floor(len(valid_update) / 2)])
     return answer
 
 
 ordering = create_ordering(rules)
 print(ordering)
-answer = find_correct_updates(updates, ordering)
-print(answer)
-
-
-# print(update[0].split(","))
+# answer = find_correct_updates(updates, ordering)
+# print(answer)

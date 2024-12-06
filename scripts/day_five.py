@@ -1,4 +1,5 @@
 from collections import defaultdict
+from copy import copy
 from math import floor
 
 # Import and filter data.
@@ -15,7 +16,6 @@ for rule in rules:
 
 
 def find_middle_numbers(updates):
-    # Find middle numbers
     answer = 0
     for update in updates:
         if len(update) % 2 == 0:
@@ -26,6 +26,9 @@ def find_middle_numbers(updates):
 
 
 def find_updates(updates, correct_flag=True):
+    """
+    Find updates that do (or do not) follow the rules.
+    """
     relevant_updates = []
     for update in updates:
         update = update.split(",")
@@ -62,14 +65,26 @@ incorrect_updates = find_updates(updates, False)
 
 ordered_updates = []
 for update in incorrect_updates:
+    ordered_update = copy(update)
     for index, number in enumerate(update):
+        # Find indexes to avoid.
         to_avoid = processed_rules.get(number)
         to_avoid_indexes = []
         if to_avoid:
             for n in to_avoid:
                 try:
-                    to_avoid_indexes.append(update.index(n))
+                    to_avoid_indexes.append(ordered_update.index(n))
                 except:
                     pass
+            # Reorder
+            if all([index < n for n in to_avoid_indexes]):
+                continue
+            else:
+                leftmost_number_to_avoid = min(to_avoid_indexes)
+                del ordered_update[index]
+                ordered_update.insert(leftmost_number_to_avoid, number)
+        else:
+            continue
+    ordered_updates.append(ordered_update)
 
 print(find_middle_numbers(ordered_updates))

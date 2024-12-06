@@ -1,13 +1,52 @@
+from collections import defaultdict
 from math import floor
 
 with open("./data/day_five_input.txt") as file:
     data = file.readlines()
 
-
 rules = [(row[0:2], row[3:5]) for row in data if "|" in row]
 updates = [row for row in data if "|" not in row and row != "\n"]
 
+# Process rules.
+processed_rules = defaultdict(list)
+for rule in rules:
+    processed_rules[int(rule[0])].append(int(rule[1]))
 
+
+# Find correct updates.
+correct_updates = []
+for update in updates:
+    update = update.split(",")
+    update = [int(u) for u in update]
+    update_length = len(update)
+    update_count = 0
+    for index, number in enumerate(update):
+        to_avoid = processed_rules.get(number)
+        to_avoid_indexes = []
+        if to_avoid:
+            for n in to_avoid:
+                try:
+                    to_avoid_indexes.append(update.index(n))
+                except:
+                    pass
+            if all([index < n for n in to_avoid_indexes]):
+                update_count += 1
+        else:
+            update_count += 1
+    if update_count == update_length:
+        correct_updates.append(update)
+
+# Find middle numbers
+answer = 0
+for valid_update in correct_updates:
+    if len(valid_update) % 2 == 0:
+        answer += int(valid_update[int(len(valid_update) / 2)])
+    else:
+        answer += int(valid_update[floor(len(valid_update) / 2)])
+print(answer)
+
+
+"""
 def create_ordering(rules):
     ordering = [rules[0][0], rules[0][1]]
     for index, rule in enumerate(rules[1:]):
@@ -79,3 +118,4 @@ ordering = create_ordering(rules)
 print(ordering)
 # answer = find_correct_updates(updates, ordering)
 # print(answer)
+"""

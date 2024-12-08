@@ -163,4 +163,5 @@ cython_debug/
 
 # Custom
 .DS_Store
-/data/
+/data
+scripts/test.py

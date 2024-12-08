@@ -7,7 +7,7 @@ Position = namedtuple("Position", ["coordinate", "direction"])
 with open("./data/day_six_input.txt") as file:
     data = file.readlines()
 
-ROW_LENGTH = 12  # 143
+ROW_LENGTH = 132  # 143
 
 
 # Functions.
@@ -53,7 +53,8 @@ def count_unique_positions(position, coordinates):
             next_position = position.coordinate - length_to_walk
             if coordinates[next_position] == "!":
                 break
-            elif coordinates[next_position] not in ("#"):
+            elif coordinates[next_position] != "#":
+                positions_crossed.append(next_position)
                 position = Position(
                     position.coordinate - length_to_walk, position.direction
                 )
@@ -67,7 +68,7 @@ def count_unique_positions(position, coordinates):
             next_position = position.coordinate - length_to_walk
             if coordinates[next_position] == "!":
                 break
-            if coordinates[next_position] not in ("#"):
+            if coordinates[next_position] != "#":
                 positions_crossed.append(next_position)
                 position = Position(
                     position.coordinate - length_to_walk, position.direction
@@ -134,16 +135,16 @@ maze = add_border(data)
 coordinates = create_coordinates(maze)
 start = find_starting_position(coordinates)
 
-permutations = []
+variants = []
 for index, character in enumerate(coordinates.values()):
     maze_copy = copy(maze)
     new_coordinates = create_coordinates(maze_copy)
     if coordinates[index] not in ("!", "^", "#"):
         new_coordinates[index] = "X"
-        permutations.append(new_coordinates)
+        variants.append(new_coordinates)
 
 count = 0
-for i, p in enumerate(permutations):
+for i, p in enumerate(variants):
     count += count_unique_positions_v2(start, p)
 
 print(count)
